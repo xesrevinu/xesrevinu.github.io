@@ -70,6 +70,6 @@ theme: landscape
 deploy:
   type: git
 
-  repo: https://github.com/leopardpan/leopardpan.github.io.git
+  repo: https://github.com/xiaokekeT/xiaokekeT.github.io.git
 
   branch: master
