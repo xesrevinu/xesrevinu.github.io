@@ -1,0 +1,13 @@
+# Default post title
+default_post_title: Sely
+
+#Date Format
+date_format: YYYY 年 MM 月 DD 日
+
+# Comment.
+comments:
+  # Disqus comment
+  disqus_shortname: sley-blog
+
+# Google Analytics Tracking ID
+google_analytics: UA-115743797-1
