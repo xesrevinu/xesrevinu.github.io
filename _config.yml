@@ -4,9 +4,9 @@
 
 # Site
 title: Sley
-subtitle: 流水点滴最为怀恋
-description:
-author: xiaokekeT
+subtitle: 汇入水滴凝成大海所在，正是我向往之处
+description: this -> blog
+author: Kee
 language: zh-CN
 timezone:
 
@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: hollow
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
