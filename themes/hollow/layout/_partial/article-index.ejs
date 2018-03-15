@@ -3,6 +3,8 @@
         <h2 class="post-title">
             <%- item.title || theme.default_post_title || "Untitled" %>
         </h2>
-        <%- item.excerpt %>
+        <span>
+            <%- item.date.format('YYYY/MM/HH') %>
+        </span>
     </a>
 </div>
