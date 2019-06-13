@@ -1,6 +1,6 @@
 ---
 title: 学习 Ramda.js (一)
-tags: [Ramda.js]
+tags: [ramda]
 date: 2018-03-15 23:32:57
 ---
 
@@ -19,7 +19,7 @@ const group_data = {
       hot: 10, // 人气
       address: '贵阳',
       last_say_time: new Date().getTime() - 1000, // 上一秒
-      last_login_time: new Date().getTime() - 5000 //最后登录时间
+      last_login_time: new Date().getTime() - 5000, //最后登录时间
     },
     {
       id: 2,
@@ -29,7 +29,7 @@ const group_data = {
       hot: 8, // 人气
       address: '湖南',
       last_say_time: new Date().getTime() - 9000,
-      last_login_time: new Date().getTime() - 3000
+      last_login_time: new Date().getTime() - 3000,
     },
     {
       id: 3,
@@ -39,9 +39,9 @@ const group_data = {
       hot: 99, // 人气
       address: '湖南',
       last_say_time: new Date().getTime() - 7000,
-      last_login_time: new Date().getTime() - 2000
-    }
-  ]
+      last_login_time: new Date().getTime() - 2000,
+    },
+  ],
 }
 ```
 
@@ -54,7 +54,11 @@ let users = R.prop('users', group_data)
 获取圈子总人气，圈子人气等于圈子内所有用户人气的综合
 
 ```js
-let hotTotal = R.compose(R.sum, R.map(R.prop('hot')), R.prop('users'))
+let hotTotal = R.compose(
+  R.sum,
+  R.map(R.prop('hot')),
+  R.prop('users'),
+)
 
 let hotTotalResult = hotTotal(group_data)
 ```
@@ -65,7 +69,7 @@ let hotTotalResult = hotTotal(group_data)
 let maxHotUser = R.compose(
   R.head,
   R.sort(R.descend(R.prop('hot'))),
-  R.prop('users')
+  R.prop('users'),
 )
 
 let maxHotUserResult = maxHotUser(group_data)
@@ -74,7 +78,10 @@ let maxHotUserResult = maxHotUser(group_data)
 将圈子里用户按地区分组
 
 ```js
-let addressGroup = R.compose(R.groupBy(x => x.address), R.prop('users'))
+let addressGroup = R.compose(
+  R.groupBy(x => x.address),
+  R.prop('users'),
+)
 
 let addressGroupResult = addressGroup(group_data)
 ```
@@ -85,7 +92,7 @@ let addressGroupResult = addressGroup(group_data)
 let lastLoginUser = R.compose(
   R.last,
   R.sort((a, b) => a.last_login_time > b.last_login_time),
-  R.prop('users')
+  R.prop('users'),
 )
 
 let lastLoginUserResult = lastLoginUser(group_data)
@@ -97,7 +104,7 @@ let lastLoginUserResult = lastLoginUser(group_data)
 let lastSayUser = R.compose(
   R.last,
   R.sort((a, b) => a.last_say_time > b.last_say_time),
-  R.prop('users')
+  R.prop('users'),
 )
 
 let lastSayUserResult = lastSayUser(group_data)
@@ -108,7 +115,11 @@ let lastSayUserResult = lastSayUser(group_data)
 ```js
 // sort就是排序规则函数实现
 let selectUserAge = R.curry((sort, group_data) =>
-  R.compose(R.head, R.sort(sort(R.prop('age'))), R.prop('users'))(group_data)
+  R.compose(
+    R.head,
+    R.sort(sort(R.prop('age'))),
+    R.prop('users'),
+  )(group_data),
 )
 
 // 最小年龄用户

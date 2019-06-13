@@ -1,10 +1,10 @@
 ---
 title: 学习 Ramda.js (二)
-tags: [Ramda.js]
+tags: [ramda]
 date: 2018-08-14 21:49:45
 ---
 
-在工作中遇到一个任务需要在所有矢量图层中将中国34个省级行政区域矢量图层找出来，这个小任务用 Ramda.js 来做当然最合适不过了。
+在工作中遇到一个任务需要在所有矢量图层中将中国 34 个省级行政区域矢量图层找出来，这个小任务用 Ramda.js 来做当然最合适不过了。
 
 测试数据
 
@@ -18,13 +18,13 @@ const testData = {
         properties: {
           attributes: {},
           id: 1,
-          searchValues: ''
-        }
+          searchValues: '',
+        },
       },
-      2101: {} // 同上结构
+      2101: {}, // 同上结构
     },
     options: {},
-    _size: {} // 省略其他key
+    _size: {}, // 省略其他key
   },
   '22:10:4': {
     _layers: {
@@ -34,14 +34,14 @@ const testData = {
         properties: {
           attributes: {},
           id: 33,
-          searchValues: '新疆维吾尔自治区'
-        }
+          searchValues: '新疆维吾尔自治区',
+        },
       },
-      2201: {} // 同上结构
+      2201: {}, // 同上结构
     },
     options: {},
-    _size: {} // 省略其他key
-  }
+    _size: {}, // 省略其他key
+  },
 }
 ```
 
@@ -58,8 +58,8 @@ const test = R.compose(
   R.map(
     R.compose(
       R.pick(['id', 'searchValues']),
-      R.prop('properties')
-    )
+      R.prop('properties'),
+    ),
   ),
   R.uniqBy(R.path(['properties', 'id'])),
   R.chain(
@@ -67,14 +67,14 @@ const test = R.compose(
       R.filter(
         R.where({
           layerName: R.equals('Province_R@China#1'),
-          type: R.equals('REGION')
-        })
+          type: R.equals('REGION'),
+        }),
       ),
-      R.values
-    )
+      R.values,
+    ),
   ),
   R.pluck(['_layers']),
-  R.values
+  R.values,
 )
 ```
 
@@ -154,15 +154,14 @@ R.map(R.values)
 
 首先分析数据发现只有 layerName 等于 Province_R@China#1 并且 type 等于 REGION 时才会是我们想要的行政区域数据，其实我也不确定因为这个条件是我猜的但我们可以试一下。
 
-
 ```js
 R.map(
   R.filter(
     R.where({
       layerName: R.equals('Province_R@China#1'),
-      type: R.equals('REGION')
-    })
-  )
+      type: R.equals('REGION'),
+    }),
+  ),
 )
 ```
 
@@ -213,8 +212,8 @@ R.uniqBy(R.path(['properties', 'id'])),
 R.map(
   R.compose(
     R.pick(['id', 'searchValues']),
-    R.pick(['properties'])
-  )
+    R.pick(['properties']),
+  ),
 )
 ```
 
@@ -227,11 +226,11 @@ R.map(
     R.filter(
       R.where({
         layerName: R.equals('Province_R@China#1'),
-        type: R.equals('REGION')
-      })
+        type: R.equals('REGION'),
+      }),
     ),
-    R.values
-  )
+    R.values,
+  ),
 )
 ```
 
