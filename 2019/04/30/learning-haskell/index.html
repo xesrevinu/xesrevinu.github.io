@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+            <meta name="description" content="this -&gt; blog">
+            
+
+                        <!--Author-->
+                        
+                            <meta name="author" content="Kee">
+                            
+
+                                <!-- Title -->
+                                
+                                    <title>
+                                        learning-haskell | Sley
+                                    </title>
+
+                                    <!-- Bootstrap Core CSS -->
+                                    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+                                    <!-- Custom CSS -->
+                                    <link rel="stylesheet" href="/css/style.css">
+
+                                        <!-- Custom Fonts -->
+                                        <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+                                        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+                                        <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+
+
+                                        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+                                        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+                                        <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-arrow-left"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>learning-haskell</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h2 id="zip"><a href="#zip" class="headerlink" title="zip"></a>zip</h2><p>学习了 Haskell 的 zip 实现，按照 Javascript 的语法重新写了一版</p>
+<p>Haskell:</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">zip'</span> :: [a] -&gt; [b] -&gt; [(a, b)]</span><br><span class="line"><span class="title">zip'</span> _        []       = []</span><br><span class="line"><span class="title">zip'</span> []       _        = []</span><br><span class="line"><span class="title">zip'</span> (x : xs) (z : ys) = (x, z) : zip' xs ys</span><br></pre></td></tr></table></figure>
+<p>Javascript:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fn1 = <span class="function"><span class="params">arr</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!arr) &#123;</span><br><span class="line">    <span class="keyword">return</span> []</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (arr.length === <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> []</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> [arr[<span class="number">0</span>], arr.slice(<span class="number">1</span>, arr.length)]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> zip = <span class="function">(<span class="params">xs, ys</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [x1, xs2] = fn1(xs)</span><br><span class="line">  <span class="keyword">const</span> [y1, ys2] = fn1(ys)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!x1) &#123;</span><br><span class="line">    <span class="keyword">return</span> []</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!y1) &#123;</span><br><span class="line">    <span class="keyword">return</span> []</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> [[x1, y1]].concat(zip(xs2, ys2))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> result = zip([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line"></span><br><span class="line">result <span class="comment">// [ [ 3, 4 ], [ 2, 3 ], [ 1, 2 ] ]</span></span><br></pre></td></tr></table></figure>
+<p>来点不一样的函数：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">applyTwice</span> :: (a -&gt; a) -&gt; a -&gt; a</span><br><span class="line"></span><br><span class="line"><span class="title">applyTwice</span> f x = f (f x)</span><br></pre></td></tr></table></figure>
+<p>传入一个 <code>f</code> 和 <code>x</code> 并将 <code>x</code> 作为 <code>f</code> 的参数，然后将 <code>f</code> 函数执行两次</p>
+<p>applyTwice 的签名可以这样理解，接受 <code>f</code> 参数，接受 <code>x</code> 参数，最后返回一个 a，那么总共可以拆成三部分</p>
+<ul>
+<li>接受 (a -&gt; a) 的第一个参数</li>
+<li>接受 a 的第二个参数</li>
+<li>返回 a</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(a -&gt; a) -&gt; a -&gt; a</span><br><span class="line">--------    -    -</span><br><span class="line">    f       x    a</span><br></pre></td></tr></table></figure>
+<h2 id="zipWith"><a href="#zipWith" class="headerlink" title="zipWith"></a>zipWith</h2><p>和 <code>zip</code> 函数类似，区别在于将两个 List 交叉到一起的重任交给了一个函数处理</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">zipWith'</span> :: (a -&gt; b -&gt; c) -&gt; [a] -&gt; [b] -&gt; [c]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一个签名 <code>(a -&gt; b -&gt; c)</code> 实际为执行 <code>f a b</code> 得到 c</li>
+<li>继续接受 <code>[a]</code> 和 <code>[b]</code> 两个 List</li>
+<li>最后返回 [c]</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">zipWith'</span> _ []       _        = []</span><br><span class="line"><span class="title">zipWith'</span> _ _        []       = []</span><br><span class="line"><span class="title">zipWith'</span> f (x : xs) (y : ys) = f x y : zipWith' f xs ys</span><br></pre></td></tr></table></figure>
+<p>让我们用 Javascript 实现一次</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> zipWith = <span class="function">(<span class="params">f, a, b</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [x, xs] = fn1(a)</span><br><span class="line">  <span class="keyword">const</span> [y, ys] = fn1(b)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!x) &#123;</span><br><span class="line">    <span class="keyword">return</span> []</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!y) &#123;</span><br><span class="line">    <span class="keyword">return</span> []</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> [f(x, y)].concat(zipWith(f, xs, ys))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a + b</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> result = zipWith(add, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line"></span><br><span class="line">result <span class="comment">// [3, 5, 7]</span></span><br></pre></td></tr></table></figure>
+<p>递归真奇妙！</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">zipWith'</span> (zipWith' (*)) [[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>], [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]] [[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>], [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]]</span><br></pre></td></tr></table></figure>
+<p>看到 Haskell 上这样用了一下第一眼是懵的，但观察一下其实非常简单，首先我们需要对 Curried functions 有了解，让我们用 Javascript 来进行同样的调用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> multiply = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a * b</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> zipWith2 = <span class="function"><span class="params">f</span> =&gt;</span> (a, b) =&gt; zipWith(f, a, b)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> result = zipWith(zipWith2(multiply), [[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">2</span>]], [[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">2</span>]])</span><br><span class="line"></span><br><span class="line">result <span class="comment">// [ [ 1, 4, 9 ], [ 1, 4 ] ]</span></span><br></pre></td></tr></table></figure>
+<p>之前定义的 zipWith 方法并不是柯里化的无法部分调用，因为在这里我们需要先将 <code>f</code> 传入稍后再传入 <code>[a]</code> <code>[b]</code>，所以再改造一下声明 <code>zipWith2</code> 方法。</p>
+<p>看完 Javascript 版本的 Haskell 是不是瞬间明白了。</p>
+<p>Note:</p>
+<p>一个类型为 <code>a -&gt; b -&gt; c</code> 的函数可以传入 <code>a -&gt; a -&gt; c</code> 类型给他， 但反过来就不行。</p>
+<h2 id="flip"><a href="#flip" class="headerlink" title="flip"></a>flip</h2><p><code>flip</code> 函数在前端工作中出现频率也挺高的，下面是经常会用到的一种方式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ids = [<span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>]</span><br><span class="line"><span class="keyword">const</span> idExist = R.flip(R.includes)(ids)</span><br><span class="line"></span><br><span class="line">idExist(<span class="number">10</span>) <span class="comment">// false</span></span><br><span class="line">idExist(<span class="number">20</span>) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">flip'</span> :: (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c</span><br><span class="line"><span class="title">flip'</span> f a b = f b a</span><br><span class="line"></span><br><span class="line"><span class="title">flip''</span> :: (a -&gt; b -&gt; c) -&gt; (b -&gt; a -&gt; c)</span><br><span class="line"><span class="title">flip''</span> f = g</span><br><span class="line">  <span class="keyword">where</span> g x y = f y x</span><br></pre></td></tr></table></figure>
+<p>第一种是自己悟出来的 😄 但第二种更适合去思考，让我们来看下这个简单函数的签名</p>
+<p><code>(a -&gt; b -&gt; c)</code> 和 <code>(b -&gt; a -&gt; c)</code> 对应的是我们接受一个函数，返回一个函数，只是单纯的 <code>a</code> <code>b</code> 位置互换</p>
+<p><code>flip f = g</code>， <code>f</code> 就是 <code>(a -&gt; b -&gt; c)</code> g 则是 <code>(b -&gt; a -&gt; c)</code>，接着将 <code>g</code> 函数定义， <code>g x y = f y x</code> 一切似乎理所当然了</p>
+<p>回来看第一种，首先将 <code>(b -&gt; a -&gt; c)</code> 签名部分去掉括号，因为 Haskell 是默认柯里化的，应该可以这样理解吧，传与不传都岁月静好。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">addTen</span> = (flip' (+)) <span class="number">10</span></span><br><span class="line"><span class="comment">-- addTen 20 // 30</span></span><br></pre></td></tr></table></figure>
+<h2 id="Collatz-串行"><a href="#Collatz-串行" class="headerlink" title="Collatz 串行"></a>Collatz 串行</h2><p>Haskell 书中介绍了 Collatz 串行 的实现方式，简单直接。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">chain'</span> :: (<span class="type">Integral</span> a) =&gt; a -&gt; [a]</span><br><span class="line"><span class="title">chain'</span> <span class="number">1</span> = [<span class="number">1</span>]</span><br><span class="line"><span class="title">chain'</span> x | even x = x : chain' (x `div` <span class="number">2</span>)</span><br><span class="line">         | odd x  = x : chain' (x * <span class="number">3</span> + <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>得到 1-100 之前所有数的 chain 长度大于 15 的</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">numLongChains</span> :: <span class="type">Int</span></span><br><span class="line"><span class="title">numLongChains</span> = length (filter isLong (map chain' [<span class="number">1</span> .. <span class="number">100</span>]))</span><br><span class="line">  <span class="keyword">where</span> isLong x = length x &gt; <span class="number">15</span></span><br></pre></td></tr></table></figure>
+<p>让我们使用 Javascript 实现同样的功能</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> chain = <span class="function"><span class="params">n</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (n === <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="number">1</span>]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (isEven(n)) &#123;</span><br><span class="line">    <span class="keyword">return</span> [n].concat(chain(n * <span class="number">3</span> + <span class="number">1</span>))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (isOdd(n)) &#123;</span><br><span class="line">    <span class="keyword">return</span> [n].concat(chain(n / <span class="number">2</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> numLongChains = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> isLong = <span class="function"><span class="params">x</span> =&gt;</span> x.length &gt; <span class="number">15</span></span><br><span class="line">  <span class="keyword">const</span> arr = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">100</span>).fill(<span class="literal">undefined</span>).map(<span class="function">(<span class="params">_, index</span>) =&gt;</span> index + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> arr.map(chain).filter(isLong).length</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>[^collatz 串行]: 取一个自然数，若为偶数就除以 2。 若为奇数就乘以 3 再加 1。再用相同的方式处理所得的结果，得到一组数字构成的链 ˘。</p>
+<h2 id="Fold"><a href="#Fold" class="headerlink" title="Fold"></a>Fold</h2><p>Haskell 中 <code>foldl</code> 函数的签名 <code>foldl :: Foldable t =&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b</code><br>Javascript 中 <code>reduce</code> 函数的签名 <code>reduce :: ((a, b) → a) → a → [b] → a</code> 是不是一个东西呢？看上去似乎是一个东西。</p>
+<p>一个简单的 sum 函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">;[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].reduce(<span class="function">(<span class="params">acc, x</span>) =&gt;</span> acc + x)</span><br></pre></td></tr></table></figure>
+<p>真是一样的呀！</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">foldl</span> (\acc x -&gt; acc + x) <span class="number">0</span> [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="comment">--    (b    a -&gt; b)       b t a</span></span><br></pre></td></tr></table></figure>
+<p>Google 了一下他俩的区别大概是 reduce 初始值是可选的， fold 需要提供一个初始值。</p>
+<h1 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h1>
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                            
+
+<a href="/tags/haskell/">#haskell</a>
+
+
+                        
+                    </div>
+                    <div class="post-date">
+                        2019 年 04 月 30 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+<div id="disqus_thread" class="comment"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = 'sley-blog';
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+
+<script type="text/javascript">
+	console.log('Thanks Hexo-theme-hollow designed by zchen9');
+</script>
+    <!-- Google Analytics -->
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-115743797-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+
+</body>
+
+</html>

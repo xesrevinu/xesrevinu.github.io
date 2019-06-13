@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+            <meta name="description" content="this -&gt; blog">
+            
+
+                        <!--Author-->
+                        
+                            <meta name="author" content="Kee">
+                            
+
+                                <!-- Title -->
+                                
+                                    <title>
+                                        node-ratelimit 学习 | Sley
+                                    </title>
+
+                                    <!-- Bootstrap Core CSS -->
+                                    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+                                    <!-- Custom CSS -->
+                                    <link rel="stylesheet" href="/css/style.css">
+
+                                        <!-- Custom Fonts -->
+                                        <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+                                        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+                                        <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+
+
+                                        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+                                        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+                                        <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-arrow-left"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>node-ratelimit 学习</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>Web 服务器通常使用内存数据库如 redis 进行会话管理，使用速率限制算法来检查用户会话是否超过限制</p>
+<p>在 Node.js 中我们可以考虑使用<a href="https://github.com/tj/node-ratelimite" target="_blank" rel="noopener">node-ratelimiter</a>配合 redis 就能很简单的实现该功能</p>
+<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>如果客户端在给定的时间内发起太多的请求，服务器可以响应 status code 为 429（<a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#429_Too_Many_Requests" target="_blank" rel="noopener">Too many Requestes</a>）</p>
+<ul>
+<li>（可选）将限制信息写入 Header</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#=============================#=============================================#</span><br><span class="line"># HTTP Header                 # Description                                 #</span><br><span class="line">#=============================#=============================================#</span><br><span class="line">| X-RateLimit-Limit           | Request limit per day / per 5 minutes       |</span><br><span class="line">+-----------------------------+---------------------------------------------+</span><br><span class="line">| X-RateLimit-Remaining       | The number of requests left for the time    |</span><br><span class="line">|                             | window                                      |</span><br><span class="line">+-----------------------------+---------------------------------------------+</span><br><span class="line">| X-RateLimit-Reset           | The remaining window before the rate limit  |</span><br><span class="line">|                             | resets in UTC epoch seconds                 |</span><br><span class="line">+-----------------------------+---------------------------------------------+</span><br></pre></td></tr></table></figure>
+<ul>
+<li>(可选) 将多久之后可调用时间写入 Header</li>
+</ul>
+<p>设置 HTTP Header 的 Retry-After</p>
+<hr>
+<h2 id="看看源码"><a href="#看看源码" class="headerlink" title="看看源码"></a>看看源码</h2><p>使用 node-ratelimiter 我们最主要传入一个 db(redis 实例), 和一个唯一的 id 做区分用户使用，<br>其余的 max，duration, key 先使用默认</p>
+<h3 id="Limiter-prototype-get"><a href="#Limiter-prototype-get" class="headerlink" title="Limiter.prototype.get"></a>Limiter.prototype.get</h3><p><code>var now = microtime.now()</code> 拿到当前时间戳</p>
+<p><code>var start = now - duration * 1000</code> 开始时间</p>
+<p><code>zremrangebyscore([key, 0, start])</code> reset 所有 删除掉 0-start 区间的条目，也就是 duration 设定时间的数据</p>
+<p><code>zcard([key])</code> 如果 key 存在返回长度, 不然返回 0</p>
+<p><code>zadd([key, now, now])</code> score 为 now 并且 value 为 now 存入名为 key 的有序集合中</p>
+<p><code>zrange([key, 0, 0])</code> 获取第一条数据</p>
+<p><code>pexpire([key, duration])</code> 设置 key 的 TTL(存活时间)，每次有正常访问都会重设 TTL</p>
+<p><code>exec</code> 获取当前集合中的条数，获取第一条数据，返回如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  remaining: count &lt; max ? max - count : <span class="number">0</span>, <span class="comment">// 剩余次数</span></span><br><span class="line">  reset: <span class="built_in">Math</span>.floor((oldest + duration * <span class="number">1000</span>) / <span class="number">1000000</span>), <span class="comment">// reset时间点为第一条加上duration</span></span><br><span class="line">  total: max</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                            
+
+<a href="/tags/node/">#node</a>
+
+
+                        
+                    </div>
+                    <div class="post-date">
+                        2017 年 09 月 07 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+<div id="disqus_thread" class="comment"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = 'sley-blog';
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+
+<script type="text/javascript">
+	console.log('Thanks Hexo-theme-hollow designed by zchen9');
+</script>
+    <!-- Google Analytics -->
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-115743797-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+
+</body>
+
+</html>

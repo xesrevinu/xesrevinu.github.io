@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+            <meta name="description" content="this -&gt; blog">
+            
+
+                        <!--Author-->
+                        
+                            <meta name="author" content="Kee">
+                            
+
+                                <!-- Title -->
+                                
+                                    <title>
+                                        学习 Ramda.js (二) | Sley
+                                    </title>
+
+                                    <!-- Bootstrap Core CSS -->
+                                    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+                                    <!-- Custom CSS -->
+                                    <link rel="stylesheet" href="/css/style.css">
+
+                                        <!-- Custom Fonts -->
+                                        <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+                                        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+                                        <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+
+
+                                        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+                                        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+                                        <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-arrow-left"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>学习 Ramda.js (二)</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>在工作中遇到一个任务需要在所有矢量图层中将中国 34 个省级行政区域矢量图层找出来，这个小任务用 Ramda.js 来做当然最合适不过了。</p>
+<p>测试数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> testData = &#123;</span><br><span class="line">  <span class="string">'22:10:5'</span>: &#123;</span><br><span class="line">    _layers: &#123;</span><br><span class="line">      <span class="number">2100</span>: &#123;</span><br><span class="line">        layerName: <span class="string">'WorldElements_R@China'</span>,</span><br><span class="line">        type: <span class="string">'REGION'</span>, <span class="comment">// TEXT、 LINE</span></span><br><span class="line">        properties: &#123;</span><br><span class="line">          attributes: &#123;&#125;,</span><br><span class="line">          id: <span class="number">1</span>,</span><br><span class="line">          searchValues: <span class="string">''</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="number">2101</span>: &#123;&#125;, <span class="comment">// 同上结构</span></span><br><span class="line">    &#125;,</span><br><span class="line">    options: &#123;&#125;,</span><br><span class="line">    _size: &#123;&#125;, <span class="comment">// 省略其他key</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">'22:10:4'</span>: &#123;</span><br><span class="line">    _layers: &#123;</span><br><span class="line">      <span class="number">2200</span>: &#123;</span><br><span class="line">        layerName: <span class="string">'Province_R@China#1'</span>,</span><br><span class="line">        type: <span class="string">'REGION'</span>,</span><br><span class="line">        properties: &#123;</span><br><span class="line">          attributes: &#123;&#125;,</span><br><span class="line">          id: <span class="number">33</span>,</span><br><span class="line">          searchValues: <span class="string">'新疆维吾尔自治区'</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="number">2201</span>: &#123;&#125;, <span class="comment">// 同上结构</span></span><br><span class="line">    &#125;,</span><br><span class="line">    options: &#123;&#125;,</span><br><span class="line">    _size: &#123;&#125;, <span class="comment">// 省略其他key</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>期望结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123; id: 33, serachValues: &apos;新疆维吾尔自治区&apos; &#125;] // 34个省级行政区域</span><br></pre></td></tr></table></figure>
+<p>代码实现</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> test = R.compose(</span><br><span class="line">  R.map(</span><br><span class="line">    R.compose(</span><br><span class="line">      R.pick([<span class="string">'id'</span>, <span class="string">'searchValues'</span>]),</span><br><span class="line">      R.prop(<span class="string">'properties'</span>),</span><br><span class="line">    ),</span><br><span class="line">  ),</span><br><span class="line">  R.uniqBy(R.path([<span class="string">'properties'</span>, <span class="string">'id'</span>])),</span><br><span class="line">  R.chain(</span><br><span class="line">    R.compose(</span><br><span class="line">      R.filter(</span><br><span class="line">        R.where(&#123;</span><br><span class="line">          layerName: R.equals(<span class="string">'Province_R@China#1'</span>),</span><br><span class="line">          type: R.equals(<span class="string">'REGION'</span>),</span><br><span class="line">        &#125;),</span><br><span class="line">      ),</span><br><span class="line">      R.values,</span><br><span class="line">    ),</span><br><span class="line">  ),</span><br><span class="line">  R.pluck([<span class="string">'_layers'</span>]),</span><br><span class="line">  R.values,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>好像完全能看懂的样子，一眼就知道它在干嘛（也许吧</p>
+<h1 id="拆开看一下"><a href="#拆开看一下" class="headerlink" title="拆开看一下"></a>拆开看一下</h1><blockquote>
+<p>R.values、R.pluck 了解一下</p>
+</blockquote>
+<p>现在我们得到了如下数据</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    2100: &#123;</span><br><span class="line">      layerName: "WorldElements_R@China",</span><br><span class="line">      type: "REGION" // TEXT、 LINE</span><br><span class="line">      properties: &#123;</span><br><span class="line">        attributes: &#123;&#125;,</span><br><span class="line">        id: 1,</span><br><span class="line">        searchValues: ""</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    2101: &#123;&#125; // 同上结构</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    2200: &#123;</span><br><span class="line">      layerName: "Province_R@China#1",</span><br><span class="line">      type: "REGION",</span><br><span class="line">      properties: &#123;</span><br><span class="line">        attributes: &#123;&#125;,</span><br><span class="line">        id: 33,</span><br><span class="line">        searchValues: "新疆维吾尔自治区"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    2201: &#123;&#125; // 同上结构</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>看到这肯定想到的是再次 values 不就可以拿到想要的对象了吗，再试一下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">R.map(R.values)</span><br></pre></td></tr></table></figure>
+<p>现在我们的数据变成这样了</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  [</span><br><span class="line">     &#123;</span><br><span class="line">      layerName: "WorldElements_R@China",</span><br><span class="line">      type: "REGION" // TEXT、 LINE</span><br><span class="line">      properties: &#123;</span><br><span class="line">        attributes: &#123;&#125;,</span><br><span class="line">        id: 1,</span><br><span class="line">        searchValues: ""</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;&#125;</span><br><span class="line">  ],</span><br><span class="line">  [</span><br><span class="line">    &#123;</span><br><span class="line">      layerName: "Province_R@China#1",</span><br><span class="line">      type: "REGION",</span><br><span class="line">      properties: &#123;</span><br><span class="line">        attributes: &#123;&#125;,</span><br><span class="line">        id: 33,</span><br><span class="line">        searchValues: "新疆维吾尔自治区"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;&#125;</span><br><span class="line">  ]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>首先分析数据发现只有 layerName 等于 Province_R@China#1 并且 type 等于 REGION 时才会是我们想要的行政区域数据，其实我也不确定因为这个条件是我猜的但我们可以试一下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">R.map(</span><br><span class="line">  R.filter(</span><br><span class="line">    R.where(&#123;</span><br><span class="line">      layerName: R.equals(<span class="string">'Province_R@China#1'</span>),</span><br><span class="line">      type: R.equals(<span class="string">'REGION'</span>),</span><br><span class="line">    &#125;),</span><br><span class="line">  ),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>不错不错，已经成功按照我们的条件过滤了</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  [],</span><br><span class="line">  [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"layerName"</span>: <span class="string">"Province_R@China#1"</span>,</span><br><span class="line">      <span class="attr">"type"</span>: <span class="string">"REGION"</span>,</span><br><span class="line">      <span class="attr">"properties"</span>: &#123;</span><br><span class="line">        <span class="attr">"attributes"</span>: &#123;&#125;,</span><br><span class="line">        <span class="attr">"id"</span>: <span class="number">33</span>,</span><br><span class="line">        <span class="attr">"searchValues"</span>: <span class="string">"新疆维吾尔自治区"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>数据变成了嵌套的数组这样似乎不太符合我们想要的，安排一下，使用 flatten 将嵌套数组以深度优先合并成一个新数组</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">"layerName"</span>: <span class="string">"Province_R@China#1"</span>,</span><br><span class="line">    <span class="attr">"type"</span>: <span class="string">"REGION"</span>,</span><br><span class="line">    <span class="attr">"properties"</span>: &#123;</span><br><span class="line">      <span class="attr">"attributes"</span>: &#123;&#125;,</span><br><span class="line">      <span class="attr">"id"</span>: <span class="number">33</span>,</span><br><span class="line">      <span class="attr">"searchValues"</span>: <span class="string">"新疆维吾尔自治区"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>去重</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">R.uniqBy(R.path([<span class="string">'properties'</span>, <span class="string">'id'</span>])),</span><br></pre></td></tr></table></figure>
+<p>获取我们所需字段</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">R.map(</span><br><span class="line">  R.compose(</span><br><span class="line">    R.pick([<span class="string">'id'</span>, <span class="string">'searchValues'</span>]),</span><br><span class="line">    R.pick([<span class="string">'properties'</span>]),</span><br><span class="line">  ),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>观察一下上面几步是否可以被合并到一个 compose 方法里面</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里的 R.map 可以被替换成 R.chain</span></span><br><span class="line">R.map(</span><br><span class="line">  R.compose(</span><br><span class="line">    R.filter(</span><br><span class="line">      R.where(&#123;</span><br><span class="line">        layerName: R.equals(<span class="string">'Province_R@China#1'</span>),</span><br><span class="line">        type: R.equals(<span class="string">'REGION'</span>),</span><br><span class="line">      &#125;),</span><br><span class="line">    ),</span><br><span class="line">    R.values,</span><br><span class="line">  ),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>我们将 map 方法替换成 chain 免去我们手动 flatten，考虑到可能会有重复数据我们还需要区调用去重方法</p>
+<p>完整代码实现见 <a href="http://ramda.cn/repl/?v=0.25.0#?%0Aconst%20testData%20%3D%20%7B%0A%20%20%2222%3A10%3A5%22%3A%20%7B%0A%20%20%20%20_layers%3A%20%7B%0A%20%20%20%20%20%202100%3A%20%7B%0A%20%20%20%20%20%20%20%20layerName%3A%20%22WorldElements_R%40China%22%2C%0A%20%20%20%20%20%20%20%20type%3A%20%22REGION%22%2C%20%2F%2F%20TEXT%E3%80%81%20LINE%0A%20%20%20%20%20%20%20%20properties%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20attributes%3A%20%7B%7D%2C%0A%20%20%20%20%20%20%20%20%20%20id%3A%201%2C%0A%20%20%20%20%20%20%20%20%20%20searchValues%3A%20%22%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%202101%3A%20%7B%0A%20%20%20%20%20%20%20%20layerName%3A%20%22Province_R%40China%231%22%2C%0A%20%20%20%20%20%20%20%20type%3A%20%22REGION%22%2C%0A%20%20%20%20%20%20%20%20properties%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20attributes%3A%20%7B%7D%2C%0A%20%20%20%20%20%20%20%20%20%20id%3A%202%2C%0A%20%20%20%20%20%20%20%20%20%20searchValues%3A%20%22%E8%B4%B5%E5%B7%9E%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%202102%3A%20%7B%7D%20%2F%2F%20%E5%90%8C%E4%B8%8A%E7%BB%93%E6%9E%84%0A%20%20%20%20%7D%2C%0A%20%20%20%20options%3A%20%7B%7D%2C%0A%20%20%20%20_size%3A%20%7B%7D%2C%20%2F%2F%20%E7%9C%81%E7%95%A5%E5%85%B6%E4%BB%96key%0A%20%20%7D%2C%0A%20%20%2222%3A10%3A4%22%3A%20%7B%0A%20%20%20%20_layers%3A%20%7B%0A%20%20%20%20%20%202200%3A%20%7B%0A%20%20%20%20%20%20%20%20layerName%3A%20%22Province_R%40China%231%22%2C%0A%20%20%20%20%20%20%20%20type%3A%20%22REGION%22%2C%0A%20%20%20%20%20%20%20%20properties%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20attributes%3A%20%7B%7D%2C%0A%20%20%20%20%20%20%20%20%20%20id%3A%2033%2C%0A%20%20%20%20%20%20%20%20%20%20searchValues%3A%20%22%E6%96%B0%E7%96%86%E7%BB%B4%E5%90%BE%E5%B0%94%E8%87%AA%E6%B2%BB%E5%8C%BA%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%202201%3A%20%7B%0A%20%20%20%20%20%20%20%20layerName%3A%20%22Province_R%40China%231%22%2C%0A%20%20%20%20%20%20%20%20type%3A%20%22REGION%22%2C%0A%20%20%20%20%20%20%20%20properties%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20attributes%3A%20%7B%7D%2C%0A%20%20%20%20%20%20%20%20%20%20id%3A%2030%2C%0A%20%20%20%20%20%20%20%20%20%20searchValues%3A%20%22%E5%8C%97%E4%BA%AC%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%202202%3A%20%7B%7D%20%2F%2F%20%E5%90%8C%E4%B8%8A%E7%BB%93%E6%9E%84%0A%20%20%20%20%7D%2C%0A%20%20%20%20options%3A%20%7B%7D%2C%0A%20%20_size%3A%20%7B%7D%2C%20%2F%2F%20%E7%9C%81%E7%95%A5%E5%85%B6%E4%BB%96key%0A%20%20%7D%2C%0A%7D%3B%0A%0Aconst%20test1%20%3D%20R.compose%28%0A%20%20R.map%28%0A%20%20%20%20R.compose%28%0A%20%20%20%20%20%20R.pick%28%5B%27id%27%2C%20%27searchValues%27%5D%29%2C%0A%20%20%20%20%20%20R.prop%28%27properties%27%29%0A%20%20%20%20%29%0A%20%20%29%2C%0A%20%20R.uniqBy%28R.path%28%5B%27properties%27%2C%20%27id%27%5D%29%29%2C%0A%20%20R.chain%28%0A%20%20%20%20R.compose%28%0A%20%20%20%20%20%20R.filter%28%0A%20%20%20%20%20%20%20%20R.where%28%7B%0A%20%20%20%20%20%20%20%20%20%20layerName%3A%20R.equals%28%27Province_R%40China%231%27%29%2C%0A%20%20%20%20%20%20%20%20%20%20type%3A%20R.equals%28%27REGION%27%29%0A%20%20%20%20%20%20%20%20%7D%29%0A%20%20%20%20%20%20%29%2C%0A%20%20%20%20%20%20R.values%0A%20%20%20%20%29%0A%20%20%29%2C%0A%20%20R.pluck%28%5B%27_layers%27%5D%29%2C%0A%20%20R.values%0A%29%0A%0Atest1%28testData%29" target="_blank" rel="noopener">demo 官方 repl 地址</a></p>
+
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                            
+
+<a href="/tags/ramda/">#ramda</a>
+
+
+                        
+                    </div>
+                    <div class="post-date">
+                        2018 年 08 月 14 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+<div id="disqus_thread" class="comment"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = 'sley-blog';
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+
+<script type="text/javascript">
+	console.log('Thanks Hexo-theme-hollow designed by zchen9');
+</script>
+    <!-- Google Analytics -->
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-115743797-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+
+</body>
+
+</html>

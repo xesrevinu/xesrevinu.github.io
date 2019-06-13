@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+            <meta name="description" content="this -&gt; blog">
+            
+
+                        <!--Author-->
+                        
+                            <meta name="author" content="Kee">
+                            
+
+                                <!-- Title -->
+                                
+                                    <title>
+                                        learning-clojure | Sley
+                                    </title>
+
+                                    <!-- Bootstrap Core CSS -->
+                                    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+                                    <!-- Custom CSS -->
+                                    <link rel="stylesheet" href="/css/style.css">
+
+                                        <!-- Custom Fonts -->
+                                        <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+                                        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+                                        <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+
+
+                                        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+                                        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+                                        <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-arrow-left"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>learning-clojure</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>clojure ring 学习</p>
+<p>ring 中间件</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">def</span></span> app</span><br><span class="line">  (<span class="name"><span class="builtin-name">-&gt;</span></span> routes</span><br><span class="line">       middlewares1</span><br><span class="line">       middlewares2))</span><br></pre></td></tr></table></figure>
+<p>常见编写 middleware 的方式</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">defn</span></span> middleware1 [handler]</span><br><span class="line">  (<span class="name"><span class="builtin-name">fn</span></span> (<span class="name">request</span>)</span><br><span class="line">    (<span class="name"><span class="builtin-name">let</span></span> [response (<span class="name">handler</span> request)</span><br><span class="line">      response)))</span><br></pre></td></tr></table></figure>
+<p><code>-&gt;</code> 是一个语法糖 让我们免去这种嵌套过深的写法</p>
+<p>我们的 middleware 接受一个 handler 参数，并返回接受一个参数为 request 的函数</p>
+<p>首先我们先通过 macroexpand 函数将表达式展开吧（是这个展开吧）</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">macroexpand</span></span> '(<span class="name"><span class="builtin-name">-&gt;</span></span> routes</span><br><span class="line">                  middlewares1</span><br><span class="line">                  middlewares2))</span><br></pre></td></tr></table></figure>
+<p>在 repl 中执行这段代码可以看到 <code>-&gt;</code> 语法糖将我们的这段代码变成了</p>
+<p><code>(middlewares2 (middlewares1 routes))</code></p>
+<p>嗯 这就是-&gt;宏干的那些悄悄事</p>
+<p>那么 ring 的中间机制是怎么让这些一个一个串起来执行的呢？</p>
+<p>handler 实际上就是下一个中间件函数对于 middlewares1 来说这里的 handler 就是 routes，对于 middleware 来说 handler 就是 <code>(middlewares1 routes)</code> 的返回值</p>
+<p><code>-&gt;</code> 执行完这一段代码得到最后的 <code>(fn [request] ())</code> 函数并返回，这个函数最后返回一个 response</p>
+<p>得益于我们的 <code>-&gt;</code> 宏，每个中间件函数的 handler 实则为我们的下一个中间件函数，我们在当前中间件函数里面执行 handler 就行了</p>
+<p>middleware2 接受的 handler 的为 <code>(middlewares1 routes)</code><br><code>(middleware2 (middlewares1 routes))</code> 执行后得到匿名函数 <code>(fn [request] (handler request))</code> 执行下一个 handler 并将 request 传入</p>
+<p>middleware1 接受的 handler 为 routes<br>(middlware1 routes) 执行后得到匿名函数 (fn [request][handler request]) 继续执行下一个 handler</p>
+<p>最后一说一下 request, 定义好我们的 app，应用并不能启动，需要通过 http server 来启动, 这里使用的是 http-kit</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(httpkit-run/server app &#123;:port 1024&#125;)</span><br></pre></td></tr></table></figure>
+<p>知道 request 怎么来的了吗 app 等于最后一个中间件返回的（fn [request] (handler request)</p>
+<p>httpkit-run/server 大致执行过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RingHandler -&gt; HttpServer -&gt; this.handler.handler(request, new RespCallback(key, this))</span><br></pre></td></tr></table></figure>
+<p>拿到 callback 以后 this.cb.run 然后 tryWrite<br>大致就是这样了,因为 java 我也不懂</p>
+<p>一个修改请求头的例子</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">def</span></span> app</span><br><span class="line">  (<span class="name"><span class="builtin-name">-&gt;</span></span> routes</span><br><span class="line">        log-request</span><br><span class="line">        update-request))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">defn</span></span> log-request [handler]</span><br><span class="line">  (<span class="name"><span class="builtin-name">fn</span></span> [request]</span><br><span class="line">    (<span class="name">println</span> (<span class="symbol">:test</span> request)  <span class="comment">; Hello</span></span><br><span class="line">    (<span class="name"><span class="builtin-name">let</span></span> [res (<span class="name">handler</span> request)]</span><br><span class="line">      res)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">defn</span></span> update-request [handler]</span><br><span class="line">  (<span class="name"><span class="builtin-name">fn</span></span> [request]</span><br><span class="line">    (<span class="name"><span class="builtin-name">let</span></span> [req (<span class="name"><span class="builtin-name">assoc</span></span> request <span class="symbol">:test</span> <span class="string">"Hello"</span>)</span><br><span class="line">          res (<span class="name">handler</span> req)]</span><br><span class="line">      res)))</span><br></pre></td></tr></table></figure>
+<p>ok，我们尝试先用 <code>macroexpand</code> 将所有的中间件理一理<br><code>(update-request (log-request routes))</code><br>首先执行 update-request</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">fn</span></span> [request]</span><br><span class="line">    (<span class="name"><span class="builtin-name">let</span></span> [req (<span class="name"><span class="builtin-name">assoc</span></span> request <span class="symbol">:test</span> <span class="string">"Hello"</span>)</span><br><span class="line">          res (<span class="name">handler</span> req)]</span><br><span class="line">      res))</span><br></pre></td></tr></table></figure>
+<p>我们添加 value 为 “Hello” 的 key 为 <code>:test</code> 到 request 中,并用 let 绑定到 req, 并将下一个 handler 执行传入修改过后的 request，返回 response<br>log-request 函数接受到修改以后的 request 打印 “Hello”，接着执行一下个 handler routes</p>
+
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                            
+
+<a href="/tags/clojure/">#clojure</a> <a href="/tags/ring/">#ring</a>
+
+
+                        
+                    </div>
+                    <div class="post-date">
+                        2016 年 12 月 06 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+<div id="disqus_thread" class="comment"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = 'sley-blog';
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+
+<script type="text/javascript">
+	console.log('Thanks Hexo-theme-hollow designed by zchen9');
+</script>
+    <!-- Google Analytics -->
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-115743797-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+
+</body>
+
+</html>

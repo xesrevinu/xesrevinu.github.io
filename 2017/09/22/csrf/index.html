@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+            <meta name="description" content="this -&gt; blog">
+            
+
+                        <!--Author-->
+                        
+                            <meta name="author" content="Kee">
+                            
+
+                                <!-- Title -->
+                                
+                                    <title>
+                                        csrf | Sley
+                                    </title>
+
+                                    <!-- Bootstrap Core CSS -->
+                                    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+                                    <!-- Custom CSS -->
+                                    <link rel="stylesheet" href="/css/style.css">
+
+                                        <!-- Custom Fonts -->
+                                        <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+                                        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+                                        <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+
+
+                                        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+                                        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+                                        <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-arrow-left"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>csrf</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="为什么需要-csrf"><a href="#为什么需要-csrf" class="headerlink" title="为什么需要 csrf"></a>为什么需要 csrf</h1><p>首先我们需要知道 cookie 和 session, cookie 是在浏览器内存在的，服务端可以通过 set-header 来改变客户端的 cookie， 每次对服务端发  请求的时候 cookie 都会被写到 http request header 里面被提交到服务端， 而 session 的功能则是记录 cookie 和用户的对应关系。<br>我们知道了 cookie 会在发起请求的时候发送到服务端，服务端通过解析接受到的 cookie 拿到其中的用户名做一些操作，那么问题就来了。</p>
+<p>A 网站 是正常用户网站提供一个接口叫做注销账户 POST 请求</p>
+<p>B 网站 通过在页面插入一个 iframe，在浏览到该页面的时候会自动 POST 注销账号请求</p>
+<p>此时问题就出现了，A 网站用户一旦访问 B 网站，A 网站用户就再也上不去 A 网站了因为账号已经被注销掉了</p>
+<h1 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h1><p>在接受 POST 请求的时候我们需要接受一个 CSRF TOKEN 参数，这个参数是访问页面的时候被告知到前端的，并且存在生成一个 secret 存在 session 里面，在接受 POST 请求的时候我们就能判断提交的时候有没有这个 CSRF TOKEN 值，并且需要验证这个值是能否通过 secret 验证</p>
+<p>这样就解决了问题，别人获取不到你的 csrf token，就没有办法用你的身份去发请求</p>
+
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                    </div>
+                    <div class="post-date">
+                        2017 年 09 月 22 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+<div id="disqus_thread" class="comment"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = 'sley-blog';
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+
+<script type="text/javascript">
+	console.log('Thanks Hexo-theme-hollow designed by zchen9');
+</script>
+    <!-- Google Analytics -->
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-115743797-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+
+</body>
+
+</html>

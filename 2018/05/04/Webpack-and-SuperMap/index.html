@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+            <meta name="description" content="this -&gt; blog">
+            
+
+                        <!--Author-->
+                        
+                            <meta name="author" content="Kee">
+                            
+
+                                <!-- Title -->
+                                
+                                    <title>
+                                        Webpack and SuperMap | Sley
+                                    </title>
+
+                                    <!-- Bootstrap Core CSS -->
+                                    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+                                    <!-- Custom CSS -->
+                                    <link rel="stylesheet" href="/css/style.css">
+
+                                        <!-- Custom Fonts -->
+                                        <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+                                        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+                                        <link href='//fonts.googleapis.com/css?family=Noto+Serif:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                                            rel='stylesheet' type='text/css'>
+
+
+                                        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+                                        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+                                        <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Content -->
+    <section class="article-container">
+<!-- Back Home -->
+<a class="nav-back" href="/">
+    <i class="fa fa-arrow-left"></i>
+</a>
+
+<!-- Page Header -->
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Webpack and SuperMap</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Main Content -->
+            <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>项目中需要使用到 SuperMap 这个地图库,被狠狠的坑了一把。嗯。让我来给大家填填坑。</p>
+<p>因为我自己的项目 Webpack 版本为 4.0+，所以这里默认大家都是 4.0+</p>
+<h2 id="项目目录"><a href="#项目目录" class="headerlink" title="项目目录"></a>项目目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── .babelrc</span><br><span class="line">├── Dockerfile</span><br><span class="line">├── LICENSE</span><br><span class="line">├── README.md</span><br><span class="line">├── jsconfig.json</span><br><span class="line">├── src</span><br><span class="line">│   ├── store</span><br><span class="line">│   ├── util</span><br><span class="line">│   ├── components</span><br><span class="line">│   ├── constants</span><br><span class="line">│   ├── services</span><br><span class="line">│   ├── routes</span><br><span class="line">│   ├── index.html</span><br><span class="line">│   ├── containers</span><br><span class="line">│   ├── index.jsx</span><br><span class="line">│   └── libs</span><br><span class="line">│       ├── Lang</span><br><span class="line">│       ├── SuperMap-8.1.1-14426.js</span><br><span class="line">│       ├── SuperMap_Basic-8.1.1-14426.js</span><br><span class="line">│       ├── SuperMap_Cloud-8.1.1-14426.js</span><br><span class="line">│       ├── SuperMap_IServer-8.1.1-14426.js</span><br><span class="line">│       ├── SuperMap_OGC-8.1.1-14426.js</span><br><span class="line">│       ├── SuperMap_Plot-8.1.1-14426.js</span><br><span class="line">│       ├── SuperMap_Visualization-8.1.1-14426.js</span><br><span class="line">│       └── theme</span><br><span class="line">├── yarn.lock</span><br><span class="line">├── webpack.prod.config.js</span><br><span class="line">├── package.json</span><br><span class="line">├── webpack.dev.config.js</span><br><span class="line">└── webpack.base.config.js</span><br></pre></td></tr></table></figure>
+<h3 id="1-首先将-SuperMap-若干-js-文件添到-entry-配置中"><a href="#1-首先将-SuperMap-若干-js-文件添到-entry-配置中" class="headerlink" title="1. 首先将 SuperMap 若干 js 文件添到 entry 配置中"></a>1. 首先将 SuperMap 若干 js 文件添到 entry 配置中</h3><p>顺序很重要，切记不要弄错。调试很久都报错，特别感谢论坛上一位朋友告诉了我这个解决方案。lib 文件可以在他们官网进行下载。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">entry: &#123;</span><br><span class="line">  vendor: [</span><br><span class="line">    <span class="string">'./src/libs/SuperMap-8.1.1-14426'</span>,</span><br><span class="line">    <span class="string">'./src/libs/SuperMap_Plot-8.1.1-14426'</span>,</span><br><span class="line">    <span class="string">'./src/libs/SuperMap_Basic-8.1.1-14426'</span>,</span><br><span class="line">    <span class="string">'./src/libs/SuperMap_IServer-8.1.1-14426'</span>,</span><br><span class="line">    <span class="string">'./src/libs/SuperMap_Visualization-8.1.1-14426'</span>,</span><br><span class="line">    <span class="string">'./src/libs/SuperMap_OGC-8.1.1-14426'</span>,</span><br><span class="line">    <span class="string">'./src/libs/SuperMap_Cloud-8.1.1-14426'</span>,</span><br><span class="line">    <span class="comment">// ...other</span></span><br><span class="line">  ],</span><br><span class="line">  app: [</span><br><span class="line">    <span class="comment">// ...you app entry</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-修改我们的-js-jsx-配置"><a href="#2-修改我们的-js-jsx-配置" class="headerlink" title="2. 修改我们的 js|jsx 配置"></a>2. 修改我们的 js|jsx 配置</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  test: <span class="regexp">/\.(js|jsx)$/</span>,</span><br><span class="line">  exclude: <span class="regexp">/node_modules/</span>,</span><br><span class="line">  include: [</span><br><span class="line">    path.resolve(__dirname, <span class="string">'node_modules/@supermap/iclient-common'</span>),</span><br><span class="line">    path.resolve(__dirname, <span class="string">'node_modules/@supermap/iclient-classic'</span>),</span><br><span class="line">    path.resolve(__dirname, <span class="string">'node_modules/elasticsearch'</span>),</span><br><span class="line">    sourcePath <span class="comment">// 我们的项目文件地址, 我这里是path.resolve('./src')</span></span><br><span class="line">  ],</span><br><span class="line">  use: [<span class="string">'babel-loader'</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-默认你已经有-png-jpg-gif-的-loader-配置了"><a href="#3-默认你已经有-png-jpg-gif-的-loader-配置了" class="headerlink" title="3. 默认你已经有 .png|.jpg|.gif 的 loader 配置了"></a>3. 默认你已经有 .png|.jpg|.gif 的 loader 配置了</h3><p>🎉</p>
+<h3 id="4-经过一番操作，按理来说应该是可以完美了的，但现实"><a href="#4-经过一番操作，按理来说应该是可以完美了的，但现实" class="headerlink" title="4. 经过一番操作，按理来说应该是可以完美了的，但现实"></a>4. 经过一番操作，按理来说应该是可以完美了的，但现实</h3><p>在这个位置卡住了好一会，原因是有一个报错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Delete of an unqualified identifier <span class="keyword">in</span> strict mode.</span><br></pre></td></tr></table></figure>
+<p>使用 <code>yarn add babel-plugin-transform-remove-strict-mode -D</code> 安装这个插件，并将其加入我们的 .babelrc 文件。看到这个插件名的时候，顾名思义， 我相信你已经懂了为什么需要这样做。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"presets"</span>: [</span><br><span class="line">    <span class="string">"react"</span>,</span><br><span class="line">    [<span class="string">"env"</span>],</span><br><span class="line">    <span class="string">"stage-0"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="string">"plugins"</span>: [</span><br><span class="line">    <span class="string">"transform-remove-strict-mode"</span> <span class="comment">// 新增 &lt;-</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="end-让我们验证一下"><a href="#end-让我们验证一下" class="headerlink" title="end. 让我们验证一下"></a>end. 让我们验证一下</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; SuperMap &#125; <span class="keyword">from</span> <span class="string">'@supermap/iclient-classic'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(SuperMap) <span class="comment">// OK</span></span><br></pre></td></tr></table></figure>
+<p>还有就是不要忘了将 lib 内的 Theme 还有 Lang 放到可以被访问的路径上，否则就 404 了</p>
+<p>问题解决，接下来的时间就让我们开始 Happy Coding 吧</p>
+
+ 
+                <!-- Meta -->
+                <div class="post-meta">
+                    <hr>
+                    <br>
+                    <div class="post-tags">
+                        
+                            
+
+<a href="/tags/webpack/">#webpack</a>
+
+
+                        
+                    </div>
+                    <div class="post-date">
+                        2018 年 05 月 04 日
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- Disqus Comments -->
+
+<div id="disqus_thread" class="comment"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = 'sley-blog';
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+</section>
+
+    <!-- Scripts -->
+    <!-- jQuery -->
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+
+<script type="text/javascript">
+	console.log('Thanks Hexo-theme-hollow designed by zchen9');
+</script>
+    <!-- Google Analytics -->
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-115743797-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+
+</body>
+
+</html>
